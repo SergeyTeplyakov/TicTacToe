@@ -6,3 +6,6 @@
 
 /bin/
 /obj/
+/packages/
+/Scripts/*.js
+/Tests/*.js

@@ -1,0 +1,38 @@
+﻿module Model {
+    
+    /**
+     * Represents current game state.
+     */
+    export interface GameSnapshot {
+        firstPlayerScore: number;
+        secondPlayerScore: number;
+
+        firstPlayer: Tile;
+        nextPlayer: Tile;
+
+        gameStatus: GameStatus;
+        winner: Tile;
+
+        grid: {
+            size: number;
+            cells: Tile[][];
+        }
+    }
+
+    export enum GameStatus {
+        Draw,
+        Victory,
+        KeepPlaying,
+    }
+
+    export class Draw { }
+
+    export class KeepPlaying { }
+
+    export class Victory {
+        constructor(public winner: Tile) { }
+    }
+
+    export type MoveResult = KeepPlaying | Draw | Victory;
+
+}
