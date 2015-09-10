@@ -4,9 +4,6 @@
      * Represents current game state.
      */
     export interface GameSnapshot {
-        firstPlayerScore: number;
-        secondPlayerScore: number;
-
         firstPlayer: Tile;
         nextPlayer: Tile;
 
@@ -17,6 +14,11 @@
             size: number;
             cells: Tile[][];
         }
+    }
+
+    export interface GameStatistics {
+        firstPlayerScore: number;
+        secondPlayerScore: number;        
     }
 
     export enum GameStatus {

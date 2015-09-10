@@ -1,5 +1,5 @@
 /// <reference path="tile.ts"/>
-/// <reference path="State.ts"/>
+/// <reference path="state.ts"/>
 
 module Model {
     export class Grid {
@@ -50,8 +50,12 @@ module Model {
             return GameStatus.KeepPlaying;
         }
 
+        public isOccupied(x: number, y: number): boolean {
+            return this.getState(x, y) ? true : false;
+        }
+
         public makeMove(x: number, y: number, value?: Tile): MoveResult {
-            if (this.getState(x, y)) {
+            if (this.isOccupied(x, y)) {
                 throw new Error(`Position (${x}, ${y}) was already occupied`);
             }
 
@@ -59,11 +63,9 @@ module Model {
             this.checkBounds(x, y);
 
             this.cells[x][y] = value;
-            let nextValue = this.nextPlayer();
-            console.log(nextValue);
-            //if (this.isFull())
+
             let winner = this.checkWinner();
-            if (winner != undefined) {
+            if (winner !== undefined) {
                 return new Victory(winner);
             }
             else if (this.isFull()) {
