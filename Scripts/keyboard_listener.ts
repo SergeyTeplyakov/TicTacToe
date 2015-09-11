@@ -15,7 +15,7 @@
     export class KeyboardListener implements AbstractKeyboardListener {
         eventHandler: (event: InputEvent) => void;
 
-        constructor() {
+        constructor(private gridSize: number) {
             this.listen();
         }
 
@@ -30,7 +30,7 @@
                 (ev: MouseEvent) => {
                     // Every div has it's own id, using this id we can compute row and col
                     let i = <number>ev.target["id"];
-                    let [y, x] = [Math.floor((i - 1) / 3), ((i - 1) % 3)];
+                    let [y, x] = [Math.floor((i - 1) / this.gridSize), ((i - 1) % this.gridSize)];
                     this.raise(ev, new TileClick(x, y));
                 });
 
@@ -48,7 +48,7 @@
                 console.log(ev);
                 // Every div has it's own id, using this id we can compute row and col
                 let i = <number>ev.target["id"];
-                let [y, x] = [Math.floor((i - 1) / 3), ((i - 1) % 3)];
+                let [y, x] = [Math.floor((i - 1) / this.gridSize), ((i - 1) % this.gridSize)];
                 this.raise(ev, new TileClick(x, y));
             });
         }

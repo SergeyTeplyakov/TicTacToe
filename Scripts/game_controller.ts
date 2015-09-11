@@ -29,7 +29,7 @@ module Control {
             firstPlayer?: string, secondPlayer?: string) {
 
             this.view = view;
-            this.keyboardListener = keyboardListener || new KeyboardListener();
+            this.keyboardListener = keyboardListener || new KeyboardListener(gridSize);
             this.contentStorage = new ContentStorage();
 
             this.firstPlayer.name = firstPlayer;
@@ -96,10 +96,10 @@ module Control {
             var gameState = this.contentStorage.getGameState();
 
             // Reload the game from a previous game if present
-            if (gameState) {
+            if (gameState && gameState.grid.size === size && gameState.grid.longestStrike === longestStrike) {
                 this.grid = new Model.Grid(
                     gameState.grid.size,
-                    gameState.grid.longestStrike || gameState.grid.size,
+                    gameState.grid.longestStrike,
                     gameState.firstPlayer,
                     gameState.grid.cells);
 
@@ -109,7 +109,7 @@ module Control {
                 //Debug.assert(this.grid.nextPlayer() === gameState.nextPlayer,
                 //    `After game restore expected next player should be '${gameState.nextPlayer}', but was '${this.grid.nextPlayer() }'`);
             } else {
-                this.grid = new Model.Grid(size, longestStrike || size, defaultTile);
+                this.grid = new Model.Grid(size, longestStrike, defaultTile);
             }
         }
 
