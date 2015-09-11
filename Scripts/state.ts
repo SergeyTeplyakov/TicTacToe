@@ -12,6 +12,7 @@
 
         grid: {
             size: number;
+            longestStrike: number;
             cells: Tile[][];
         }
     }

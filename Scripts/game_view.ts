@@ -39,7 +39,8 @@ module View {
             this.messageContainer = document.querySelector(".game-message");
             this.gameHintContainer = document.querySelector(".game-intro");
 
-            this.setPlayerNames(firstPlayerName, secondPlayerName);
+            // TODO: have no idea how to change player names!
+            //this.setPlayerNames(firstPlayerName, secondPlayerName);
         }
 
         introduceNextPlayer(playerName: string): void {
@@ -97,7 +98,10 @@ module View {
         }
 
         private setPlayerNames(firstPlayerName: string, secondPlayerName: string) {
-            
+            //.first - player - container: .first-player-container
+            var first = document.querySelector(".first-player-container");
+            first.textContent = 'asfasfa';
+            var second = document.querySelector(".first-player-container");
         }
 
         private clearContainer(container) {

@@ -22,6 +22,7 @@ module ContentStorage_Tests {
             winner: undefined,
             grid: {
                 size: 0,
+                longestStrike: 0,
                 cells: []
             }
         });

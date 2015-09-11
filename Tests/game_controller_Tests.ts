@@ -46,7 +46,7 @@ module GameController_Tests {
         let firstPlayer = "player1";
         let secondPlayer = "player2";
 
-        let controller = new Control.GameController(size, view, keyboard, firstPlayer, secondPlayer);
+        let controller = new Control.GameController(size, size, view, keyboard, firstPlayer, secondPlayer);
 
         ok(view.introducedPlayer, 'introducePlayer should be called on the view from the beginning');
         equal(view.introducedPlayer, firstPlayer, 'first player should be introduced');

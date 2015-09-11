@@ -25,7 +25,7 @@ module Control {
         //private firstPlayer(): { name: string, score: number } { return this.player(Model.Tile.X); }
         //private secondPlayer(): { name: string, score: number } { return this.player(Model.Tile.X); }
 
-        constructor(size: number, view: View.AbstractView, keyboardListener: AbstractKeyboardListener,
+        constructor(gridSize: number, longestStrike: number, view: View.AbstractView, keyboardListener: AbstractKeyboardListener,
             firstPlayer?: string, secondPlayer?: string) {
 
             this.view = view;
@@ -36,7 +36,7 @@ module Control {
             this.secondPlayer.name = secondPlayer;
 
             // this will create this.grid
-            this.restoreGameStateIfNeeded(size);
+            this.restoreGameStateIfNeeded(gridSize, longestStrike);
 
             // For JS newby: bind is super critical, because 'this' in callbacks would be equal to sender, not to the receiver!
             this.keyboardListener.subscribe(this.handleInput.bind(this));
@@ -92,23 +92,24 @@ module Control {
             this.contentStorage.updateGameState(this.getGameState());
         }
 
-        private restoreGameStateIfNeeded(size: number) {
+        private restoreGameStateIfNeeded(size: number, longestStrike: number) {
             var gameState = this.contentStorage.getGameState();
 
             // Reload the game from a previous game if present
             if (gameState) {
                 this.grid = new Model.Grid(
                     gameState.grid.size,
+                    gameState.grid.longestStrike || gameState.grid.size,
                     gameState.firstPlayer,
                     gameState.grid.cells);
 
                 this.view.updateGameState(gameState);
 
-                // TODO: put it back!
+                // TODO: fix this!
                 //Debug.assert(this.grid.nextPlayer() === gameState.nextPlayer,
                 //    `After game restore expected next player should be '${gameState.nextPlayer}', but was '${this.grid.nextPlayer() }'`);
             } else {
-                this.grid = new Model.Grid(size, defaultTile);
+                this.grid = new Model.Grid(size, longestStrike || size, defaultTile);
             }
         }
 
@@ -126,7 +127,8 @@ module Control {
         private restart() {
             //alert('restarting...');
             let size = this.grid.size;
-            this.grid = new Model.Grid(size, Model.getAnotherValue(this.grid.firstMove));
+            let strike = this.grid.strike;
+            this.grid = new Model.Grid(size, strike, Model.getAnotherValue(this.grid.firstMove));
 
             let gameState = this.getGameState();
             this.contentStorage.updateGameState(gameState);
