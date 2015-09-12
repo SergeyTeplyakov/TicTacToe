@@ -22,15 +22,16 @@ module View {
     }
 
     export class GameView implements AbstractView {
-        tileContainer: Element;
-        firstPlayerScoreContainer: Element;
-        secondPlayerScoreContainer: Element;
-        messageContainer: Element;
+        private tileContainer: Element;
+        private firstPlayerScoreContainer: Element;
+        private secondPlayerScoreContainer: Element;
+        private messageContainer: Element;
 
-        gameHintContainer: Element;
+        private gameHintContainer: Element;
+        private moves: Element[] = [];
 
-        firstPlayerScore: number;
-        secondPlayerScore: number;
+        private firstPlayerScore: number;
+        private secondPlayerScore: number;
 
         constructor(firstPlayerName: string, secondPlayerName: string) {
 
@@ -39,22 +40,25 @@ module View {
             this.secondPlayerScoreContainer = document.querySelector(".second-player-container");
             this.messageContainer = document.querySelector(".game-message");
             this.gameHintContainer = document.querySelector(".game-intro");
-
+            
             // TODO: have no idea how to change player names!
-            //this.setPlayerNames(firstPlayerName, secondPlayerName);
         }
 
         introduceNextPlayer(playerName: string): void {
             let type = "game-intro";
 
-            var message = `${playerName}, this is your move!`;
+            var message = `${playerName}, this is your turn!`;
 
             this.gameHintContainer.classList.add(type);
             this.gameHintContainer.getElementsByTagName("p")[0].textContent = message;            
         }
 
         makeMove(x: number, y: number, value: Tile): void {
-            this.addTile(x, y, value);
+            if (value) {
+                this.addTile(x, y, value);
+            } else {
+                this.removeTile(x, y);
+            }
         }
 
         // Continues the game (both restart and keep playing)
@@ -99,6 +103,7 @@ module View {
         }
 
         private setPlayerNames(firstPlayerName: string, secondPlayerName: string) {
+            // NOT IMPLEMENTED!
             //.first - player - container: .first-player-container
             var first = document.querySelector(".first-player-container");
             first.textContent = 'asfasfa';
@@ -134,6 +139,18 @@ module View {
 
             // Put the tile on the board
             this.tileContainer.appendChild(wrapper);
+
+            this.moves.push(wrapper);
+        }
+
+        private removeTile(x: number, y: number) {
+            this.clearMessage();
+
+            let lastMove = this.moves.pop();
+
+            if (lastMove) {
+                this.tileContainer.removeChild(lastMove);
+            }
         }
 
         private applyClasses(element: HTMLDivElement, classes: string[]) {

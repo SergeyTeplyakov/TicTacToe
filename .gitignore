@@ -9,3 +9,6 @@
 /packages/
 /Scripts/*.js
 /Tests/*.js
+
+/.vs/
+/.settings/

@@ -53,7 +53,35 @@ module Control {
                 this.handleClick(event.x, event.y);
             } else if (event instanceof Restart) {
                 this.restart();
+            } else if (event instanceof Undo) {
+                this.handleUndo();
             }
+        }
+
+        private handleUndo() {
+            let currentWinner = this.grid.winner();
+            let lastMove = this.grid.undoMove();
+
+            if (!lastMove) {
+                return;
+            }
+
+            // Making a move on the view
+            this.view.makeMove(lastMove.x, lastMove.y, undefined);
+
+            if (currentWinner) {
+                this.player(currentWinner).score--;
+            }
+            
+            let gameStatistics = this.getGameStatistics();
+            this.contentStorage.updateGameStatistics(gameStatistics);
+            this.view.updateGameStatistics(gameStatistics);
+
+            // Keep playing. Need to introduce next player then
+            let nextPlayer = this.grid.nextPlayer();
+            this.view.introduceNextPlayer(this.player(nextPlayer).name);
+
+            this.contentStorage.updateGameState(this.getGameState());
         }
 
         private handleClick(x: number, y: number) {
@@ -67,7 +95,6 @@ module Control {
             let moveResult = this.grid.makeMove(x, y);
 
             // Making a move on the view
-            // TODO: nextValue.toString() provides 1 and 2!
             this.view.makeMove(x, y, nextValue);
 
             // Checking the results
@@ -125,7 +152,6 @@ module Control {
         }
 
         private restart() {
-            //alert('restarting...');
             let size = this.grid.size;
             let strike = this.grid.strike;
             this.grid = new Model.Grid(size, strike, Model.getAnotherValue(this.grid.firstMove));
@@ -137,16 +163,6 @@ module Control {
             this.view.updateGameState(gameState);
             this.view.introduceNextPlayer(this.player(this.grid.nextPlayer()).name);
         }
-
-        // Keep playing after winning (allows going over 2048)
-        keepPlayingFunc() {
-            //this.keepPlaying = true;
-            //this.actuator.continueGame(); // Clear the game won/lost message
-        }
-
-        //isGameTerminated() {
-        //    return this.over || (this.won && !this.keepPlaying);
-        //}
 
         getGameState(): Model.GameSnapshot {
             return {
@@ -161,7 +177,7 @@ module Control {
         getGameStatistics(): Model.GameStatistics {
             return {
                 firstPlayerScore: this.firstPlayer.score,
-                secondPlayerScore: this.secondPlayer.score,
+                secondPlayerScore: this.secondPlayer.score
             };
         }
     }

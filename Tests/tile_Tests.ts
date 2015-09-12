@@ -1,4 +1,4 @@
-﻿/// <reference path="../Scripts/Tile.ts"/>
+﻿/// <reference path="../Scripts/tile.ts"/>
 
 module Tile_Tests {
 

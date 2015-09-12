@@ -1,14 +1,14 @@
 @import "helpers";
 @import "fonts/clear-sans.css";
 
-$field-width: 1000px;
-$grid-spacing: 15px;
+$field-width: 700px;
+$grid-spacing: 5px;
 $grid-row-cells: 10;
 $tile-size: ($field-width - $grid-spacing * ($grid-row-cells + 1)) / $grid-row-cells;
 $tile-border-radius: 3px;
 
 $animation-name: move-up;
-$mobile-threshold: $field-width + 20px;
+$mobile-threshold: $field-width + 10px;
 
 $text-color: #776E65;
 $bright-text-color: #f9f6f2;
@@ -17,7 +17,7 @@ $tile-color: #eee4da;
 $tile-gold-color: #edc22e;
 $tile-gold-glow-color: lighten($tile-gold-color, 15%);
 
-$game-container-margin-top: 40px;
+$game-container-margin-top: 10px;
 $game-container-background: #bbada0;
 
 $transition-speed: 100ms;
@@ -67,7 +67,7 @@ h1.title {
 
 .first-player-container, .second-player-container {
   $height: 25px;
-  width: 40px;
+  width: 60px;
   position: relative;
   display: inline-block;
   background: $game-container-background;
@@ -108,11 +108,11 @@ h1.title {
 }
 
 .first-player-container:after {
-  content: "Angie (X)";
+  content: "Player 1 (X)";
   }
 
 .second-player-container:after {
-  content: "Daddy (O)"
+  content: "Player 2 (O)";
 }
 
 p {
@@ -318,7 +318,9 @@ hr {
   .tile-inner {
     border-radius: $tile-border-radius;
 
-    background: $tile-color;
+    /*background: $tile-color;*/
+    // In this case tiles should be the same as a grid!
+    background: rgba($tile-color, .35);
     text-align: center;
     font-weight: bold;
     z-index: 10;
@@ -400,6 +402,15 @@ hr {
   float: right;
 }
 
+.undo-button {
+  @include button;
+  display: block;
+  text-align: center;
+  float: right;
+  margin-right: 5px;
+  width: 50px;
+}
+
 .game-explanation {
   margin-top: 50px;
 }
@@ -435,7 +446,8 @@ hr {
   .first-player-container, .second-player-container {
     margin-top: 0;
     padding: 15px 10px;
-    min-width: 40px;
+    min-width: 50px;
+    width: 50px;
   }
 
   .heading {
@@ -451,11 +463,20 @@ hr {
   }
 
   .restart-button {
-    width: 42%;
+    width: 50%;
     padding: 0;
     display: block;
     box-sizing: border-box;
     margin-top: 2px;
+  }
+  
+  .undo-button {
+    width: 50%;
+    padding: 0;
+    display: block;
+    box-sizing: border-box;
+    margin-top: 2px;
+    margin-right: 5px;
   }
 
   // Render the game field at the right width

@@ -1,4 +1,4 @@
-﻿/// <reference path="../Scripts/Grid.ts"/>
+﻿/// <reference path="../Scripts/grid.ts"/>
 
 QUnit.module("Grid.ts tests");
 

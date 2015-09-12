@@ -6,13 +6,19 @@ module Model {
         O = 2,
     }
 
+    export interface TileState {
+        x: number,
+        y: number,
+        state: Tile,
+    }
+
     export function getTileDisplayClass(value: Tile): string {
-        //return value === Tile.X ? "8" : "16";
         return value === Tile.X ? "X" : "O";
     }
 
     export function getTileString(value: Tile): string {
-        return value === Tile.X ? "\u274C" : "\u25EF";
+        //return value === Tile.X ? "\u274C" : "\u25EF";
+        return value === Tile.X ? "\u2715" : "\u25EF";
     }
 
     export function getAnotherValue(value: Tile): Tile {

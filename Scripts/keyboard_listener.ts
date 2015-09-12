@@ -6,7 +6,9 @@
 
     export class Restart { }
 
-    export type InputEvent = TileClick | Restart;
+    export class Undo { }
+
+    export type InputEvent = TileClick | Restart | Undo;
 
     export interface AbstractKeyboardListener {
         subscribe(handler: (event: InputEvent) => void): void;
@@ -37,6 +39,7 @@
             // Respond to button presses
             this.bindButtonPress(".new-game-button", this.raiseRestart);
             this.bindButtonPress(".restart-button", this.raiseRestart);
+            this.bindButtonPress(".undo-button", this.raiseUndo);
     
             // Respond to touch event
             // TODO: why not to use grid-container? in this case scope would be even smaller!
@@ -59,6 +62,10 @@
             if (this.eventHandler) {
                 this.eventHandler(boardEvent);
             }
+        }
+
+        private raiseUndo(event: Event) {
+            this.raise(event, new Undo());
         }
 
         private raiseRestart(event: Event) {

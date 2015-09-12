@@ -3,13 +3,14 @@
 /// <reference path="state.ts"/>
 
 module Model {
+
     export class Grid {
         // First move is critical for the game
         firstMove: Tile;
         public size: number;
         public strike: number;
         private cells: Array<Tile[]>;
-        private occupiedCellsCount: number;
+        private moves: Array<TileState> = [];
 
         // need to compute and store a winner becuse ther is no way to effectively compute 
         // the winner for the whole field
@@ -18,7 +19,6 @@ module Model {
         constructor(size: number, strike: number, firstMove: Tile, previousState?: Array<Tile[]>) {
             this.size = size;
             this.strike = strike;
-            this.occupiedCellsCount = 0;
             this.firstMove = firstMove;
             this.cells = empty(size);
 
@@ -40,7 +40,7 @@ module Model {
                 return undefined;
             }
 
-            return ((this.occupiedCellsCount + this.firstMove) % 2 === 1) ? Tile.X : Tile.O;
+            return ((this.occupiedCellsCount() + this.firstMove) % 2 === 1) ? Tile.X : Tile.O;
         }
 
         public getState(x: number, y: number): Tile {
@@ -73,7 +73,7 @@ module Model {
             value = value || this.nextPlayer();
             this.checkBounds(x, y);
 
-            this.occupiedCellsCount++;
+            this.moves.push({ x: x, y: y, state: value });
             this.cells[x][y] = value;
 
             let winner = this.checkWinner({x: x, y: y});
@@ -88,33 +88,21 @@ module Model {
             return new KeepPlaying();
         }
 
+        undoMove(): TileState {
+            if (this.occupiedCellsCount() === 0) {
+                return undefined;
+            }
+
+            let lastMove = this.moves.pop();
+            this.cells[lastMove.x][lastMove.y] = undefined;
+            this.currentWinner = undefined;
+
+            return lastMove;
+        }
+
         winner(): Tile {
             return this.currentWinner;
         }
-
-        //public nonEmptyCells(): { x: number, y: number, value: Tile }[] {
-        //    let tiles = [];
-
-        //    this.eachCell((x, y, value) => {
-        //        if (value) {
-        //            tiles.push({ x: x, y: y, value: value});
-        //        }
-        //    });
-
-        //    return tiles;
-        //}
-
-        //public emptyCells(): { x: number, y: number, value: Tile }[] {
-        //    let tiles = [];
-
-        //    this.eachCell((x, y, value) => {
-        //        if (!value) {
-        //            tiles.push({ x: x, y: y, value: value });
-        //        }
-        //    });
-
-        //    return tiles;
-        //}
 
         public serialize(): { size: number, longestStrike: number, cells: Array<Tile[]> } {
             var cellState = new Array<Tile[]>(this.size);
@@ -140,7 +128,11 @@ module Model {
         }
 
         public emptyCellsCount() {
-            return this.size * this.size - this.occupiedCellsCount;
+            return this.size * this.size - this.occupiedCellsCount();
+        }
+
+        private occupiedCellsCount() {
+            return this.moves.length;
         }
 
         private checkBounds(x: number, y: number) {
@@ -206,24 +198,14 @@ module Model {
             return (x >= 0 && x < this.size) && (y >= 0 && y < this.size);
         }
 
-        public checkWinner2(p: { x: number, y: number }): Tile {
-            let diff = this.strike - 1;
-            
-            let upperRight = { x: p.x + diff, y: p.y + diff };
-            let bottomLeft = { x: p.x - diff, y: p.y - diff };
-
-            let bottomLeftToUpperRight = this.getSubArray(bottomLeft, upperRight);
-
-            let candidate = this.longestStrike(bottomLeftToUpperRight);
-            if (candidate.value && candidate.count === this.strike) {
-                return candidate.value;
-            }
-            return undefined;
-        }
-
-// Super primitive implementation that checks a winner.
         public checkWinner(p: {x: number, y: number}): Tile {
+            // Implementation is relatively simple.
+            // Because grid has arbitrary size the solution should be O(longestStrike) but
+            // not O(gridSize).
+            // To check winner, we need to check all diags with new point in the middle.
+
             // Need to get 4 arrays with max 2*strike - 1 elements and look for a strike in each of them
+
             let diff = this.strike - 1;
 
             let leftMost = { x: p.x, y: p.y - diff };
@@ -248,47 +230,8 @@ module Model {
             }
 
             return undefined;
-            //let diag1 = [this.cells[0][0], this.cells[1][1], this.cells[2][2]];
-            //let diag2 = [this.cells[2][0], this.cells[1][1], this.cells[0][2]];
-
-            //let result: Tile;
-
-            //if ((result = this.allTheSame(diag1)) !== undefined) {
-            //    return result;
-            //}
-
-            //if ((result = this.allTheSame(diag2)) !== undefined) {
-            //    return result;
-            //}
-
-            //for (let n = 0; n < this.size; n++) {
-            //    let row = [this.cells[n][0], this.cells[n][1], this.cells[n][2]];
-            //    let col = [this.cells[0][n], this.cells[1][n], this.cells[2][n]];
-
-            //    if ((result = this.allTheSame(row)) !== undefined) {
-            //        return result;
-            //    }
-
-            //    if ((result = this.allTheSame(col)) !== undefined) {
-            //        return result;
-            //    }
-            //}
-
-            //return undefined;
         }
 
-        //private allTheSame(array: Tile[]): Tile {
-        //    if (array.every(t => t === Tile.X)) {
-        //        return Tile.X;
-        //    }
-        //    if (array.every(t => t === Tile.O)) {
-        //        return Tile.O;
-        //    }
-
-        //    return undefined;
-        //}
-
-        // Call callback for every cell  
         private eachCell(callback: (x: number, y: number, tile: Tile) => void): void {
             for (var x = 0; x < this.size; x++) {
                 for (var y = 0; y < this.size; y++) {
@@ -301,7 +244,6 @@ module Model {
             var cells = new Array<Tile[]>(size);
 
             for (var x = 0; x < size; x++) {
-                //var row = cells[x] = new Array<Tile>(size);
 
                 for (var y = 0; y < size; y++) {
                     let tile = state[x][y];
