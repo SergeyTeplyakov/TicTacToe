@@ -6,8 +6,13 @@ module Model {
         O = 2,
     }
 
-    export function getTileValue(value: Tile): string {
-        return value === Tile.X ? 'X' : 'O';
+    export function getTileDisplayClass(value: Tile): string {
+        //return value === Tile.X ? "8" : "16";
+        return value === Tile.X ? "X" : "O";
+    }
+
+    export function getTileString(value: Tile): string {
+        return value === Tile.X ? "\u274C" : "\u25EF";
     }
 
     export function getAnotherValue(value: Tile): Tile {

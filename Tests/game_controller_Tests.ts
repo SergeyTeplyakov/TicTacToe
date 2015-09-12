@@ -20,8 +20,8 @@ module GameController_Tests {
         public introducedPlayer;
         introduceNextPlayer(playerName: string): void { this.introducedPlayer = playerName; }
 
-        public moved: {x: number, y: number, value: string};
-        makeMove(x: number, y: number, value: string): void { this.moved = { x: x, y: y, value: value }; }
+        public moved: {x: number, y: number, value: Model.Tile};
+        makeMove(x: number, y: number, value: Model.Tile): void { this.moved = { x: x, y: y, value: value }; }
         
         public clearedGame: boolean;
         clearMessage(): void { this.clearedGame = true; }

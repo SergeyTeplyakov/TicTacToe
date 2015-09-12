@@ -4,12 +4,13 @@
 /// <reference path="grid.ts"/>
 
 module View {
+    import Tile = Model.Tile;
 
     export interface AbstractView {
         // Show message for the next player
         introduceNextPlayer(playerName: string): void;
 
-        makeMove(x: number, y: number, value: string): void;
+        makeMove(x: number, y: number, tile: Tile): void;
         // clears all pending messages on the scrin
         clearMessage(): void;
 
@@ -52,7 +53,7 @@ module View {
             this.gameHintContainer.getElementsByTagName("p")[0].textContent = message;            
         }
 
-        makeMove(x: number, y: number, value: string): void {
+        makeMove(x: number, y: number, value: Tile): void {
             this.addTile(x, y, value);
         }
 
@@ -110,7 +111,7 @@ module View {
             }
         }
 
-        private addTile(x: number, y: number, value: string) {
+        private addTile(x: number, y: number, tile: Tile) {
             var wrapper = document.createElement("div");
             var inner = document.createElement("div");
 
@@ -118,12 +119,12 @@ module View {
             let positionClass = getPositionClass({ x: x, y: y });
 
             // We can't use classlist because it somehow glitches when replacing classes
-            var classes = ["tile", "tile-" + value, positionClass];
+            var classes = ["tile", "tile-" + Model.getTileDisplayClass(tile), positionClass];
 
             this.applyClasses(wrapper, classes);
 
             inner.classList.add("tile-inner");
-            inner.textContent = value.toString();
+            inner.textContent = Model.getTileString(tile);
 
             classes.push("tile-new");
             this.applyClasses(wrapper, classes);

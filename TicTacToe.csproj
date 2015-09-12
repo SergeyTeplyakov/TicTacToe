@@ -31,6 +31,12 @@
     <Content Include="style\fonts\ClearSans-Bold-webfont.svg" />
     <Content Include="style\fonts\ClearSans-Light-webfont.svg" />
     <Content Include="style\fonts\ClearSans-Regular-webfont.svg" />
+    <Content Include="style\helpers.css">
+      <DependentUpon>helpers.scss</DependentUpon>
+    </Content>
+    <Content Include="style\helpers.min.css">
+      <DependentUpon>helpers.css</DependentUpon>
+    </Content>
     <Content Include="style\main.css" />
     <TypeScriptCompile Include="Scripts\content_storage.ts" />
     <TypeScriptCompile Include="Scripts\game_controller.ts" />

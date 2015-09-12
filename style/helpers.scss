@@ -1,25 +1,3 @@
-// Exponent
-// From: https://github.com/Team-Sass/Sassy-math/blob/master/sass/math.scss#L36
-
-@function exponent($base, $exponent) {
-  // reset value
-  $value: $base;
-  // positive intergers get multiplied
-  @if $exponent > 1 {
-    @for $i from 2 through $exponent {
-      $value: $value * $base; } }
-  // negitive intergers get divided. A number divided by itself is 1
-  @if $exponent < 1 {
-    @for $i from 0 through -$exponent {
-      $value: $value / $base; } }
-  // return the last value written
-  @return $value;
-}
-
-@function pow($base, $exponent) {
-  @return exponent($base, $exponent);
-}
-
 // Transition mixins
 @mixin transition($args...) {
   -webkit-transition: $args;
@@ -52,14 +30,63 @@
 }
 
 // Keyframe animations
-@mixin keyframes($animation-name) {
-  @-webkit-keyframes $animation-name {
+@mixin keyframes_move_up() {
+  @-webkit-keyframes move-up {
     @content;
   }
-  @-moz-keyframes $animation-name {
+  @-moz-keyframes move-up {
     @content;
   }
-  @keyframes $animation-name {
+  @keyframes move-up {
+    @content;
+  }
+}
+
+@mixin keyframes_fade_in() {
+  @-webkit-keyframes fade-in {
+    @content;
+  }
+  @-moz-keyframes fade-in {
+    @content;
+  }
+  @keyframes fade-in {
+    @content;
+  }
+}
+
+@mixin keyframes_appear() {
+  @-webkit-keyframes appear {
+    @content;
+  }
+  @-moz-keyframes appear {
+    @content;
+  }
+  @keyframes appear {
+    @content;
+  }
+}
+
+@mixin keyframes_pop() {
+  @-webkit-keyframes pop {
+    @content;
+  }
+  @-moz-keyframes pop {
+    @content;
+  }
+  @keyframes pop {
+    @content;
+  }
+}
+
+
+@mixin keyframes($animation) {
+  @-webkit-keyframes $animation {
+    @content;
+  }
+  @-moz-keyframes $animation {
+    @content;
+  }
+  @keyframes $animation {
     @content;
   }
 }

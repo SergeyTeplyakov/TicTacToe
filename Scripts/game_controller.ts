@@ -68,7 +68,7 @@ module Control {
 
             // Making a move on the view
             // TODO: nextValue.toString() provides 1 and 2!
-            this.view.makeMove(x, y, Model.getTileValue(nextValue));
+            this.view.makeMove(x, y, nextValue);
 
             // Checking the results
             if (moveResult instanceof Model.Victory) {
