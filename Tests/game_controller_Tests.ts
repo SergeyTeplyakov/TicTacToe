@@ -40,6 +40,8 @@ module GameController_Tests {
 
     QUnit.module("GameController tests");
 
+    // TODO: add tests for undo!!! to grid and this class!
+
     test("basic test", () => {
         let keyboard = new FakeKeyboard();
         let view = new FakeView();

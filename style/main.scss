@@ -1,9 +1,9 @@
 @import "helpers";
 @import "fonts/clear-sans.css";
 
-$field-width: 700px;
-$grid-spacing: 5px;
-$grid-row-cells: 10;
+$field-width: 300px;
+$grid-spacing: 4px;
+$grid-row-cells: 3;
 $tile-size: ($field-width - $grid-spacing * ($grid-row-cells + 1)) / $grid-row-cells;
 $tile-border-radius: 3px;
 
@@ -21,6 +21,7 @@ $game-container-margin-top: 10px;
 $game-container-background: #bbada0;
 
 $transition-speed: 100ms;
+$tile-font-size: 40pt;
 
 html, body {
   margin: 0;
@@ -325,7 +326,7 @@ hr {
     font-weight: bold;
     z-index: 10;
 
-    font-size: 55px;
+    font-size: $tile-font-size;
   }
 
   // Movement transition
