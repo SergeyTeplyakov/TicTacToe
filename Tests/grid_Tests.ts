@@ -143,6 +143,23 @@ test("test few winner with 5x5", () => {
     equal(winner(new Grid(5, 3, Value.O), cells), Value.O);
 });
 
+test("test undo", () => {
+    let grid = createGrid();
+
+    let currentPlayer = grid.nextPlayer();
+
+    grid.makeMove(0, 2, Value.X);
+    equal(grid.nextPlayer(), Value.O);
+    equal(grid.getState(0, 2), Value.X);
+
+    grid.undoMove();
+    equal(grid.nextPlayer(), currentPlayer, "Undo should revert next player");
+    equal(grid.isOccupied(0, 2), false);
+});
+
+//----------------------------------------------------------------------
+// Helper functions
+//----------------------------------------------------------------------
 function createGrid() {
     return new Grid(size, size, firstMove);
 }
