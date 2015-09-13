@@ -12,3 +12,7 @@
 
 /.vs/
 /.settings/
+
+web.config
+web.debug.config
+web.release.config
