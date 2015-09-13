@@ -1,9 +1,9 @@
 @import "helpers";
 @import "fonts/clear-sans.css";
 
-$field-width: 300px;
-$grid-spacing: 4px;
-$grid-row-cells: 3;
+$field-width: 800px;
+$grid-spacing: 6px;
+$grid-row-cells: 10;
 $tile-size: ($field-width - $grid-spacing * ($grid-row-cells + 1)) / $grid-row-cells;
 $tile-border-radius: 3px;
 
@@ -42,7 +42,7 @@ body {
 }
 
 h1.title {
-  font-size: 50px;
+  font-size: 40px;
   font-weight: bold;
   margin: 0;
   display: block;
@@ -80,6 +80,7 @@ h1.title {
   border-radius: 3px;
   color: white;
   margin-top: 8px;
+  margin-bottom: 8px;
   text-align: center;
 
   &:after {
@@ -418,9 +419,9 @@ hr {
 
 @include smaller($mobile-threshold) {
   // Redefine variables for smaller screens
-  $field-width: 280px;
-  $grid-spacing: 10px;
-  $grid-row-cells: 4;
+  $field-width: 400px;
+  $grid-spacing: 4px;
+  $grid-row-cells: 10;
   $tile-size: ($field-width - $grid-spacing * ($grid-row-cells + 1)) / $grid-row-cells;
   $tile-border-radius: 3px;
   $game-container-margin-top: 17px;
