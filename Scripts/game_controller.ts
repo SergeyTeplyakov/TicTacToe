@@ -60,6 +60,12 @@ module Control {
 
         private handleUndo() {
             let currentWinner = this.grid.winner();
+
+            // Can't undo if someone won!
+            if (currentWinner) {
+                return;
+            }
+
             let lastMove = this.grid.undoMove();
 
             if (!lastMove) {
@@ -101,6 +107,7 @@ module Control {
             if (moveResult instanceof Model.Victory) {
                 this.player(moveResult.winner).score++;
 
+                this.view.setWinningStrike(moveResult.winner, moveResult.strike);
                 this.view.victory(this.player(moveResult.winner).name);
 
                 // Need to store the statistics as well, because game was finished!

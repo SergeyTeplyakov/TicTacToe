@@ -15,6 +15,8 @@ module View {
         clearMessage(): void;
 
         victory(winner: string): void;
+        setWinningStrike(tile: Tile, cells: { x: number, y: number }[]);
+
         draw(): void;
 
         updateGameStatistics(gameStatistics: Model.GameStatistics): void;
@@ -33,14 +35,32 @@ module View {
         private firstPlayerScore: number;
         private secondPlayerScore: number;
 
-        constructor(firstPlayerName: string, secondPlayerName: string) {
+        constructor(gridSize: number, firstPlayerName: string, secondPlayerName: string) {
 
             this.tileContainer = document.querySelector(".tile-container");
             this.firstPlayerScoreContainer = document.querySelector(".first-player-container");
             this.secondPlayerScoreContainer = document.querySelector(".second-player-container");
             this.messageContainer = document.querySelector(".game-message");
             this.gameHintContainer = document.querySelector(".game-intro");
+
+            // This stuff is not working properly!
+            //let gridContainer = document.querySelector(".grid-container");
+            //let id = 0;
+            //for (let n = 0; n < gridSize; n++) {
+            //    var gridRow = document.createElement("div");
+            //    for (let col = 0; col < gridSize; col++) {
+            //        let columnDiv = document.createElement("div");
+            //        columnDiv.classList.add("grid-cell");
+            //        columnDiv.id = id.toString();
+
+            //        gridRow.appendChild(columnDiv);
+            //        id++;
+            //    }
+
+            //    gridContainer.appendChild(gridRow);
+            //}
             
+
             // TODO: have no idea how to change player names!
         }
 
@@ -72,6 +92,12 @@ module View {
 
             this.messageContainer.classList.add(type);
             this.messageContainer.getElementsByTagName("p")[0].textContent = message;
+        }
+
+        setWinningStrike(tile: Tile, cells: { x: number, y: number }[]) {
+            for (let cell of cells) {
+                this.addTile(cell.x, cell.y, tile, true);
+            }
         }
 
         draw(): void {
@@ -116,7 +142,7 @@ module View {
             }
         }
 
-        private addTile(x: number, y: number, tile: Tile) {
+        private addTile(x: number, y: number, tile: Tile, isWinning?: boolean) {
             var wrapper = document.createElement("div");
             var inner = document.createElement("div");
 
@@ -124,7 +150,12 @@ module View {
             let positionClass = getPositionClass({ x: x, y: y });
 
             // We can't use classlist because it somehow glitches when replacing classes
-            var classes = ["tile", "tile-" + Model.getTileDisplayClass(tile), positionClass];
+            let tileClass = "tile-" + Model.getTileDisplayClass(tile);
+            if (isWinning) {
+                tileClass += "-Win";
+            }
+
+            var classes = ["tile", tileClass, positionClass];
 
             this.applyClasses(wrapper, classes);
 

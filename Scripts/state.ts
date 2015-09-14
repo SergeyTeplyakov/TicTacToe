@@ -33,7 +33,7 @@
     export class KeepPlaying { }
 
     export class Victory {
-        constructor(public winner: Tile) { }
+        constructor(public winner: Tile, public strike: {x: number, y: number}[]) { }
     }
 
     export type MoveResult = KeepPlaying | Draw | Victory;

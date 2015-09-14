@@ -54,21 +54,29 @@ test("move on occupied cell should throw", () => {
 });
 
 test("test subarray", () => {
-    let grid = createGrid();
+    let grid = new Model.Grid(10, 5, Value.X);
     grid.makeMove(0, 0, Value.X);
     grid.makeMove(0, 1, Value.X);
     grid.makeMove(0, 2, Value.X);
-    //equal(grid.winner(), Value.X);
-    //equal(grid.checkWinner({ x: 2, y: 2 }), Value.X);
-
-    let subArray = grid.getSubArray({ x: 0, y: 0 }, { x: 0, y: 4 });
-    equal(subArray.length, 3, 'len should be 3 but was ' + subArray.length);
+    grid.makeMove(0, 3, Value.X);
+    grid.makeMove(0, 4, Value.X);
+    grid.makeMove(0, 5, Value.X);
+    grid.makeMove(0, 6, Value.X);
+    grid.makeMove(0, 7, Value.X);
+    
+    let subArray = grid.getSubArray({ x: 0, y: 0 }, { x: 0, y: 9 });
+    //equal(subArray.length, 5, 'len should be 5 but was ' + subArray.length);
 
     let strike = grid.longestStrike(subArray);
-    equal(strike.count, grid.strike);
-    equal(strike.value, Value.X);
+    equal(strike.strike.length, 8);
+    equal(strike.value, Value.X, 'expected X as a value');
 
-    //equal(strike.count)
+    //equal(grid.winner(), Value.X);
+    let winner = grid.checkWinner({ x: 0, y: 4 });
+    ok(winner, 'should be a winner!');
+    equal(winner.tile, Value.X, 'X should be a winner');
+    equal(winner.strike.length, 8, 'strike should be 7');
+
 });
 
 test("diag should win", () => {
@@ -155,6 +163,47 @@ test("test undo", () => {
     grid.undoMove();
     equal(grid.nextPlayer(), currentPlayer, "Undo should revert next player");
     equal(grid.isOccupied(0, 2), false);
+});
+
+test("Winner with long strike", () => {
+    let grid = new Model.Grid(10, 5, Value.X);
+
+    grid.makeMove(0, 0, Value.X);
+    grid.makeMove(0, 1, Value.X);
+    grid.makeMove(0, 2, Value.X);
+    grid.makeMove(0, 3, Value.X);
+    grid.makeMove(0, 5, Value.X);
+    grid.makeMove(0, 6, Value.X);
+    grid.makeMove(0, 7, Value.X);
+
+    let winner = grid.makeMove(0, 4, Value.X);
+
+    if (winner instanceof Model.Victory) {
+        equal(winner.winner, Value.X);
+        equal(winner.strike.length, 8);
+        return;
+    }
+
+    ok(false, 'Should not get to this poin!');
+});
+
+
+test("Test 10x10 field", () => {
+    let grid = new Model.Grid(10, 5, Value.X);
+
+    grid.makeMove(0, 0, Value.X);
+    grid.makeMove(0, 1, Value.X);
+    grid.makeMove(0, 2, Value.X);
+    grid.makeMove(0, 3, Value.X);
+    let winner = grid.makeMove(0, 4, Value.X);
+
+    if (winner instanceof Model.Victory) {
+        equal(winner.winner, Value.X);
+        equal(winner.strike.length, 5);
+        return;
+    }
+
+    ok(false, 'Should not get to this poin!');
 });
 
 //----------------------------------------------------------------------

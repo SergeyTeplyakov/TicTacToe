@@ -29,6 +29,8 @@ module GameController_Tests {
         public winner: string;
         victory(winner: string): void { this.winner = winner; }
 
+        setWinningStrike(tile: Model.Tile, cells: { x: number, y: number }[]) {}
+
         public drawWasCalled: boolean;
         draw(): void { this.drawWasCalled = true; }
 

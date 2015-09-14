@@ -77,9 +77,9 @@ module Model {
             this.cells[x][y] = value;
 
             let winner = this.checkWinner({x: x, y: y});
-            if (winner !== undefined) {
-                this.currentWinner = winner;
-                return new Victory(winner);
+            if (winner) {
+                this.currentWinner = winner.tile;
+                return new Victory(winner.tile, winner.strike);
             }
             else if (this.isFull()) {
                 return new Draw();
@@ -144,33 +144,41 @@ module Model {
             }
         }
 
-        /*internal*/ longestStrike(array: Tile[]): { value: Tile, count: number } {
-            let result: { value: Tile, count: number } = { value: undefined, count: 0 };
+        /** 
+         * Checks the longest 'strike' of any tiles in the specified array.
+        */
+        /*internal*/ longestStrike(array: TileState[]): { value: Tile, strike: TileState[]} {
+            let result: { value: Tile, begin: number, count: number } = { value: undefined, count: 0, begin: 0 };
 
-            let current: { value: Tile, count: number } = { value: undefined, count: 0 };
-            for (let t of array) {
+            let current: { value: Tile, begin: number, count: number } = { value: undefined, count: 0, begin: 0 };
+
+            for(let index = 0; index < array.length; index++) {
+                let t = array[index];
+
                 if (t) {
-                    if (current.value === t) {
+                    if (current.value === t.state) {
                         current.count++;
                     } else {
-                        current.value = t;
+                        current.value = t.state;
+                        current.begin = index;
                         current.count = 1;
                     }
                 }
 
                 if (current.count > result.count) {
-                    result = {value: current.value, count: current.count};
+                    result = {value: current.value, count: current.count, begin: current.begin};
                 }
             }
 
-            return result;
+            let subArray = array.slice(result.begin, result.begin + result.count);
+            return { value: result.value, strike: subArray};
         }
 
-        /*internal*/ getSubArray(first: { x: number, y: number }, second: { x: number, y: number }): Tile[] {
+        /*internal*/ getSubArray(first: { x: number, y: number }, second: { x: number, y: number }): TileState[] {
             let x = first.x;
             let y = first.y;
 
-            let result: Tile[] = [];
+            let result: TileState[] = [];
             let dx = (second.x > first.x) ? 1 : (second.x < first.x) ? -1 : 0;
             let dy = (second.y > first.y) ? 1 : (second.y < first.y) ? -1 : 0;
 
@@ -180,7 +188,7 @@ module Model {
             while (true)
             {
                 if (this.withinBounds(x, y)) {
-                    result.push(this.cells[x][y]);
+                    result.push({ x: x, y: y, state: this.cells[x][y] });
                 }
 
                 if (x === second.x && y === second.y) {
@@ -198,7 +206,7 @@ module Model {
             return (x >= 0 && x < this.size) && (y >= 0 && y < this.size);
         }
 
-        public checkWinner(p: {x: number, y: number}): Tile {
+        public checkWinner(p: {x: number, y: number}): {tile: Tile, strike: {x: number, y: number}[]}  {
             // Implementation is relatively simple.
             // Because grid has arbitrary size the solution should be O(longestStrike) but
             // not O(gridSize).
@@ -224,20 +232,12 @@ module Model {
 
             for (let array of [bottomLeftToUpperRight, leftToRight, upperLeftToBottomRight, topToBottom]) {
                 let candidate = this.longestStrike(array);
-                if (candidate.value && candidate.count === this.strike) {
-                    return candidate.value;
+                if (candidate.value && candidate.strike.length >= this.strike) {
+                    return { tile: candidate.value, strike: candidate.strike };
                 }
             }
 
             return undefined;
-        }
-
-        private eachCell(callback: (x: number, y: number, tile: Tile) => void): void {
-            for (var x = 0; x < this.size; x++) {
-                for (var y = 0; y < this.size; y++) {
-                    callback(x, y, this.cells[x][y]);
-                }
-            }
         }
 
         initState(size: number, state: Array<Tile[]>): Tile[][] {
@@ -271,30 +271,4 @@ module Model {
 
         return cells;
     }
-
-    //export function getSubArray(first: { x: number, y: number }, second: { x: number, y: number }): Tile[] {
-    //    Debug.assert(first.x <= second.x || first.y <= second.y, `first position should be in upper left and second position - bottom right. first: (${first.x}, ${first.y}), second: (${second.x}, ${second.y})`);
-
-    //    let current = { x: first.x, y: first.y };
-
-    //    let result: Tile[] = [];
-
-    //    let dx = (second.x - first.x) === 0 ? 0 : 1;
-    //    let dy = (second.y - first.y) === 0 ? 0 : 1;
-
-    //    Debug.assert(dx !== 0 || dy !== 0, "dx or dy should not be 0");
-
-    //    do {
-    //        if (this.withinBounds(current.x, current.y)) {
-    //            result.push(this.cells[current.x][current.y]);
-    //        }
-
-    //        current.x += dx;
-    //        current.y += dy;
-
-    //    } while (current.x !== second.x && current.y !== second.y);
-
-    //    return result;
-    //}
-
 }
