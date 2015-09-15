@@ -1,13 +1,16 @@
 @import "helpers";
 @import "fonts/clear-sans.css";
 
-// For 3 x 3
+$grid-row-count: 10;
 
-$field-width: 600px;
+$tile-size: 60px;
 $grid-spacing: 4px;
-$grid-row-cells: 10;
-$tile-size: ($field-width - $grid-spacing * ($grid-row-cells + 1)) / $grid-row-cells;
+$grid-row-size: $tile-size + $grid-spacing;
+
+$tile-font-size: $tile-size * 0.75;
 $tile-border-radius: 3px;
+
+$field-width: ($tile-size + $grid-spacing)*($grid-row-count) + $grid-spacing;
 
 $title-font-size: 30px;
 
@@ -28,7 +31,7 @@ $game-container-margin-top: 10px;
 $game-container-background: #bbada0;
 
 $transition-speed: 100ms;
-$tile-font-size: 38pt;
+/*$tile-font-size: 38pt;*/
 
 html, body {
   margin: 0;
@@ -80,7 +83,7 @@ h1.title {
   display: inline-block;
   background: $game-container-background;
   padding: 15px 25px;
-  font-size: $height;
+  font-size: $height - 5px;
   height: $height;
   line-height: $height + 22px;
   font-weight: bold;
@@ -309,8 +312,8 @@ hr {
     }
 
     // Build position classes
-    @for $x from 1 through $grid-row-cells {
-      @for $y from 1 through $grid-row-cells {
+    @for $x from 1 through $grid-row-count {
+      @for $y from 1 through $grid-row-count {
         &.tile-position-#{$x}-#{$y} {
           $xPos: floor(($tile-size + $grid-spacing) * ($x - 1));
           $yPos: floor(($tile-size + $grid-spacing) * ($y - 1));
@@ -460,12 +463,23 @@ hr {
 
 @include smaller($mobile-threshold) {
   // Redefine variables for smaller screens
-  $field-width: 400px;
-  $grid-spacing: 4px;
-  $grid-row-cells: 10;
-  $tile-size: ($field-width - $grid-spacing * ($grid-row-cells + 1)) / $grid-row-cells;
-  $tile-border-radius: 3px;
+  /*$field-width: 400px;*/
+  /*$grid-spacing: 4px;*/
+  /*$grid-row-cells: 10;*/
+  /*$tile-size: ($field-width - $grid-spacing * ($grid-row-cells + 1)) / $grid-row-cells;*/
+  /*$tile-border-radius: 3px;*/
   $game-container-margin-top: 10px;
+  /*$grid-row-count: 10;*/
+
+$tile-size: 40px;
+$grid-spacing: 4px;
+$grid-row-size: $tile-size + $grid-spacing;
+
+$tile-font-size: $tile-size * 0.75;
+$tile-border-radius: 3px;
+
+$field-width: ($tile-size + $grid-spacing)*($grid-row-count) + $grid-spacing;
+
 
   html, body {
     font-size: 15px;
@@ -488,7 +502,7 @@ hr {
   }
   
   .game-container {
-      width: $field-width/2;
+      width: $field-width;
       }
 
 
